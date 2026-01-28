@@ -1,0 +1,12 @@
+{
+  "name": "Marieli Heredia Garcez - Cartão Digital",
+  "description": "Cartão Digital Premium - Marieli Heredia Garcez",
+  "icons": [
+    {
+      "src": "https://cdn.bioflow.online/Logo%20HTO.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ],
+  "requestFramePermissions": []
+}
