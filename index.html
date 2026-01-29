@@ -15,18 +15,11 @@
         background-color: #161616;
         margin: 0;
         padding: 0;
+        color: white;
       }
-      /* Custom Gold color from the branding */
       .text-gold { color: #bfa072; }
       .bg-gold { background-color: #bfa072; }
       .border-gold { border-color: #bfa072; }
-      
-      /* Smooth transitions for interactive elements */
-      .transition-all {
-        transition-property: all;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 150ms;
-      }
     </style>
     <script type="importmap">
 {
@@ -34,7 +27,7 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.473.0?external=react",
+    "lucide-react": "https://esm.sh/lucide-react@0.473.0?external=react&bundle",
     "qrcode.react": "https://esm.sh/qrcode.react@4.2.0?external=react",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/"
@@ -44,5 +37,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Importante: Carrega o arquivo principal do app -->
+    <script type="module" src="index.tsx"></script>
   </body>
 </html>
