@@ -28,7 +28,6 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${CONTACT_DATA.whatsapp}`, '_blank');
   };
 
-  // Ícone de contato direto: Usa mailto clássico para respeitar o padrão do dispositivo
   const handleDirectEmail = () => {
     window.location.href = `mailto:${CONTACT_DATA.email}`;
   };
@@ -38,36 +37,26 @@ const App: React.FC = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
-  /**
-   * REFORMULAÇÃO: Lógica dos 3 Pilares para Enviar E-mail
-   */
   const handleSharePdfEmail = () => {
     const titulo = `Cartão Digital - ${CONTACT_DATA.name}`;
     const link = ASSET_URLS.cardPdf;
-    // Pilar 2: String Única (Juntando mensagem e link para evitar bugs no Gmail)
     const mensagemCompleta = `Olá, segue o link do meu cartão digital: ${link}`;
 
     const abrirMailtoFallback = () => {
-      // Pilar 3: Fallback Robusto com encodeURIComponent
       const url = `mailto:?subject=${encodeURIComponent(titulo)}&body=${encodeURIComponent(mensagemCompleta)}`;
       window.location.href = url;
     };
 
-    // Pilar 1: Web Share API (Modo Nativo)
     if (navigator.share) {
       navigator.share({
         title: titulo,
         text: mensagemCompleta 
-        // Nota: Não passamos o campo 'url' separadamente aqui para garantir que 
-        // o Gmail no Android não ignore o texto ou o link.
       }).catch((error) => {
-        // Se o usuário cancelar ou o navegador der erro, usa o fallback
         if (error.name !== 'AbortError') {
           abrirMailtoFallback();
         }
       });
     } else {
-      // PC ou Navegadores Antigos
       abrirMailtoFallback();
     }
   };
@@ -105,7 +94,6 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#161616] text-white flex flex-col items-center p-6 pb-12 max-w-md mx-auto overflow-x-hidden font-['Montserrat']">
       
-      {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-[#bfa072] text-[#161616] px-6 py-3 rounded-full flex items-center gap-3 shadow-2xl animate-in fade-in zoom-in duration-300">
           <CheckCircleIcon className="w-5 h-5" />
@@ -113,7 +101,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Logo Area */}
       <div className="mt-8 mb-10">
         <div className="w-56 h-56 flex items-center justify-center p-2">
           <img 
@@ -124,7 +111,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Name and Professional Info */}
       <div className="text-center mb-8 px-4">
         <h1 className="text-3xl font-medium tracking-wide mb-1 uppercase">
           {CONTACT_DATA.name.split(' ').slice(0, 2).join(' ')}
@@ -134,7 +120,6 @@ const App: React.FC = () => {
         </h1>
       </div>
 
-      {/* Main Action (Phone) */}
       <div className="w-full mb-8">
         <a 
           href={`tel:${CONTACT_DATA.phone.replace(/\D/g, '')}`}
@@ -145,7 +130,6 @@ const App: React.FC = () => {
         </a>
       </div>
 
-      {/* Icon Row Buttons */}
       <div className="flex justify-between w-full mb-10 px-4">
         <button onClick={handleDirectWhatsApp} className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
           <WhatsAppIcon className="w-7 h-7" />
@@ -161,15 +145,12 @@ const App: React.FC = () => {
         </a>
       </div>
 
-      {/* Address Text */}
       <div className="text-center text-sm text-gray-400 mb-10 max-w-[280px] leading-relaxed">
         {CONTACT_DATA.address}
       </div>
 
-      {/* Divider */}
       <div className="w-full h-[1px] bg-[#bfa072]/30 mb-12"></div>
 
-      {/* Secondary Bottom Buttons */}
       <div className="flex flex-col gap-4 w-full px-2 mb-12">
         <button 
           onClick={() => setIsQrModalOpen(true)}
@@ -197,14 +178,13 @@ const App: React.FC = () => {
 
         <button 
           onClick={handleDownloadPdf}
-          className="flex items-center justify-center gap-3 w-full bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl text-lg hover:opacity-90 transition-all shadow-lg uppercase"
+          className="flex items-center justify-center gap-2 sm:gap-3 w-full bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl text-sm sm:text-lg hover:opacity-90 transition-all shadow-lg uppercase whitespace-nowrap px-4"
         >
-          <DownloadIcon className="w-5 h-5" />
+          <DownloadIcon className="w-5 h-5 flex-shrink-0" />
           <span>Download para o Celular</span>
         </button>
       </div>
 
-      {/* Bottom Logo */}
       <div className="flex items-center gap-3 mt-auto opacity-80 pb-4">
         <div className="w-10 h-10 border-2 border-[#bfa072] flex items-center justify-center overflow-hidden">
             <img src={ASSET_URLS.logo} alt="HTO Logo" className="w-full h-full object-contain scale-150" />
@@ -215,7 +195,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* QR Code Modal Overlay */}
       {isQrModalOpen && (
         <div className="fixed inset-0 z-[100] bg-[#161616] flex flex-col items-center justify-center p-6 animate-in slide-in-from-bottom duration-300">
           <div className="mb-8 w-40 h-40 flex items-center justify-center">
