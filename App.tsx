@@ -17,7 +17,6 @@ const App: React.FC = () => {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
-  // Efeito para esconder o toast automaticamente
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -29,10 +28,9 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${CONTACT_DATA.whatsapp}`, '_blank');
   };
 
-  // Alterado para abrir diretamente no Gmail
+  // Ícone de contato direto: Usa mailto clássico para respeitar o padrão do dispositivo
   const handleDirectEmail = () => {
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_DATA.email}`;
-    window.open(gmailUrl, '_blank');
+    window.location.href = `mailto:${CONTACT_DATA.email}`;
   };
 
   const handleSharePdfWhatsapp = () => {
@@ -40,12 +38,38 @@ const App: React.FC = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
-  // Alterado para compartilhar via Gmail
+  /**
+   * REFORMULAÇÃO: Lógica dos 3 Pilares para Enviar E-mail
+   */
   const handleSharePdfEmail = () => {
-    const subject = encodeURIComponent(`Cartão Digital - ${CONTACT_DATA.name}`);
-    const body = encodeURIComponent(`Olá, segue o link do meu cartão digital: ${ASSET_URLS.cardPdf}`);
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
-    window.open(gmailUrl, '_blank');
+    const titulo = `Cartão Digital - ${CONTACT_DATA.name}`;
+    const link = ASSET_URLS.cardPdf;
+    // Pilar 2: String Única (Juntando mensagem e link para evitar bugs no Gmail)
+    const mensagemCompleta = `Olá, segue o link do meu cartão digital: ${link}`;
+
+    const abrirMailtoFallback = () => {
+      // Pilar 3: Fallback Robusto com encodeURIComponent
+      const url = `mailto:?subject=${encodeURIComponent(titulo)}&body=${encodeURIComponent(mensagemCompleta)}`;
+      window.location.href = url;
+    };
+
+    // Pilar 1: Web Share API (Modo Nativo)
+    if (navigator.share) {
+      navigator.share({
+        title: titulo,
+        text: mensagemCompleta 
+        // Nota: Não passamos o campo 'url' separadamente aqui para garantir que 
+        // o Gmail no Android não ignore o texto ou o link.
+      }).catch((error) => {
+        // Se o usuário cancelar ou o navegador der erro, usa o fallback
+        if (error.name !== 'AbortError') {
+          abrirMailtoFallback();
+        }
+      });
+    } else {
+      // PC ou Navegadores Antigos
+      abrirMailtoFallback();
+    }
   };
 
   const handleDownloadPdf = () => {
@@ -126,7 +150,7 @@ const App: React.FC = () => {
         <button onClick={handleDirectWhatsApp} className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
           <WhatsAppIcon className="w-7 h-7" />
         </button>
-        <button onClick={handleDirectEmail} title="Abrir no Gmail" className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
+        <button onClick={handleDirectEmail} title="Enviar E-mail" className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
           <MailIcon className="w-7 h-7" />
         </button>
         <a href={CONTACT_DATA.website} target="_blank" rel="noopener noreferrer" className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
@@ -168,7 +192,7 @@ const App: React.FC = () => {
           className="flex items-center justify-center gap-3 w-full bg-[#1e1e1e] border border-[#bfa072]/30 py-4 rounded-xl text-lg hover:border-[#bfa072] transition-all"
         >
           <MailIcon className="w-5 h-5 text-[#bfa072]" />
-          <span>Enviar por Gmail</span>
+          <span>Enviar por e-mail</span>
         </button>
 
         <button 
