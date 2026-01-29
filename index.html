@@ -2,8 +2,20 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Marieli Heredia Garcez - Cartão Digital</title>
+    
+    <!-- PWA / Mobile App Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Marieli H. G.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#161616">
+    
+    <!-- App Icon for Home Screen -->
+    <link rel="apple-touch-icon" href="https://cdn.bioflow.online/Logo%20HTO.webp">
+    <link rel="icon" type="image/webp" href="https://cdn.bioflow.online/Logo%20HTO.webp">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,11 +27,17 @@
         margin: 0;
         padding: 0;
         color: white;
+        -webkit-tap-highlight-color: transparent;
       }
       #root {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+      }
+      /* Previne scroll horizontal acidental */
+      html, body {
+        overflow-x: hidden;
+        position: relative;
       }
     </style>
     <script type="importmap">
@@ -30,8 +48,8 @@
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
     "lucide-react": "https://esm.sh/lucide-react@0.475.0?external=react",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
