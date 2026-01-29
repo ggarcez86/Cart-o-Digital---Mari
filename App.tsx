@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { CONTACT_DATA, ASSET_URLS } from './constants';
 import { 
@@ -9,8 +10,7 @@ import {
   QrCodeIcon, 
   DownloadIcon, 
   ShareIcon,
-  CheckCircleIcon,
-  CloseIcon
+  CheckCircleIcon
 } from './components/Icons';
 
 const App: React.FC = () => {
@@ -29,8 +29,10 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${CONTACT_DATA.whatsapp}`, '_blank');
   };
 
+  // Alterado para abrir diretamente no Gmail
   const handleDirectEmail = () => {
-    window.location.href = `mailto:${CONTACT_DATA.email}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_DATA.email}`;
+    window.open(gmailUrl, '_blank');
   };
 
   const handleSharePdfWhatsapp = () => {
@@ -38,10 +40,12 @@ const App: React.FC = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
+  // Alterado para compartilhar via Gmail
   const handleSharePdfEmail = () => {
     const subject = encodeURIComponent(`Cartão Digital - ${CONTACT_DATA.name}`);
     const body = encodeURIComponent(`Olá, segue o link do meu cartão digital: ${ASSET_URLS.cardPdf}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
   };
 
   const handleDownloadPdf = () => {
@@ -122,7 +126,7 @@ const App: React.FC = () => {
         <button onClick={handleDirectWhatsApp} className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
           <WhatsAppIcon className="w-7 h-7" />
         </button>
-        <button onClick={handleDirectEmail} className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
+        <button onClick={handleDirectEmail} title="Abrir no Gmail" className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
           <MailIcon className="w-7 h-7" />
         </button>
         <a href={CONTACT_DATA.website} target="_blank" rel="noopener noreferrer" className="p-4 border border-[#bfa072]/40 rounded-sm hover:bg-[#bfa072]/10 transition-all text-[#bfa072]">
@@ -164,7 +168,7 @@ const App: React.FC = () => {
           className="flex items-center justify-center gap-3 w-full bg-[#1e1e1e] border border-[#bfa072]/30 py-4 rounded-xl text-lg hover:border-[#bfa072] transition-all"
         >
           <MailIcon className="w-5 h-5 text-[#bfa072]" />
-          <span>Enviar por e-mail</span>
+          <span>Enviar por Gmail</span>
         </button>
 
         <button 
@@ -187,51 +191,41 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* QR Code Modal Overlay - FIXED WITH SCROLL */}
+      {/* QR Code Modal Overlay */}
       {isQrModalOpen && (
-        <div className="fixed inset-0 z-[100] bg-[#161616] overflow-y-auto animate-in slide-in-from-bottom duration-300">
-          {/* Top Sticky Close Button */}
-          <button 
-            onClick={() => setIsQrModalOpen(false)}
-            className="fixed top-6 right-6 z-[110] p-2 bg-white/5 rounded-full text-[#bfa072] hover:bg-white/10 transition-colors"
-          >
-            <CloseIcon className="w-8 h-8" />
-          </button>
+        <div className="fixed inset-0 z-[100] bg-[#161616] flex flex-col items-center justify-center p-6 animate-in slide-in-from-bottom duration-300">
+          <div className="mb-8 w-40 h-40 flex items-center justify-center">
+            <img src={ASSET_URLS.logo} alt="Logo" className="w-full h-full object-contain opacity-50" />
+          </div>
+          
+          <div className="bg-white p-6 rounded-2xl shadow-2xl mb-12">
+            <img 
+              src={ASSET_URLS.qrCodeImage} 
+              alt="QR Code Marieli" 
+              className="w-64 h-64 object-contain"
+            />
+          </div>
 
-          <div className="min-h-screen flex flex-col items-center justify-start p-6 pt-16 pb-12">
-            <div className="mb-6 w-24 h-24 flex items-center justify-center">
-              <img src={ASSET_URLS.logo} alt="Logo" className="w-full h-full object-contain opacity-50" />
-            </div>
+          <div className="text-center mb-12 max-w-xs">
+            <h2 className="text-2xl font-bold text-[#bfa072] mb-4">QR CODE</h2>
+            <p className="text-gray-400 text-sm leading-relaxed">Escaneie o código acima para acessar o cartão digital de Marieli Heredia Garcez.</p>
+          </div>
+
+          <div className="flex flex-col gap-4 w-full max-w-xs">
+            <button 
+              onClick={handleShareLink}
+              className="flex items-center justify-center gap-3 text-[#bfa072] border border-[#bfa072]/30 py-4 rounded-xl hover:bg-[#bfa072]/10 transition-all font-semibold"
+            >
+              <ShareIcon className="w-5 h-5" />
+              <span>COMPARTILHAR LINK</span>
+            </button>
             
-            <div className="bg-white p-6 rounded-2xl shadow-2xl mb-8">
-              <img 
-                src={ASSET_URLS.qrCodeImage} 
-                alt="QR Code Marieli" 
-                className="w-56 h-56 md:w-64 md:h-64 object-contain"
-              />
-            </div>
-
-            <div className="text-center mb-8 max-w-xs">
-              <h2 className="text-2xl font-bold text-[#bfa072] mb-2 uppercase tracking-widest">QR CODE</h2>
-              <p className="text-gray-400 text-sm leading-relaxed">Escaneie o código acima para acessar o cartão digital.</p>
-            </div>
-
-            <div className="flex flex-col gap-4 w-full max-w-xs">
-              <button 
-                onClick={handleShareLink}
-                className="flex items-center justify-center gap-3 text-[#bfa072] border border-[#bfa072]/30 py-4 rounded-xl hover:bg-[#bfa072]/10 transition-all font-semibold"
-              >
-                <ShareIcon className="w-5 h-5" />
-                <span>COMPARTILHAR LINK</span>
-              </button>
-              
-              <button 
-                onClick={() => setIsQrModalOpen(false)}
-                className="flex items-center justify-center gap-2 bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl hover:opacity-90 transition-all shadow-lg uppercase"
-              >
-                <span>VOLTAR</span>
-              </button>
-            </div>
+            <button 
+              onClick={() => setIsQrModalOpen(false)}
+              className="flex items-center justify-center gap-2 bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl hover:opacity-90 transition-all shadow-lg uppercase"
+            >
+              <span>VOLTAR PARA A TELA INICIAL</span>
+            </button>
           </div>
         </div>
       )}
